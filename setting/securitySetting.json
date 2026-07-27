@@ -1,7 +1,7 @@
 {
     "system_config": {
         "app_name": "Gemini Advanced Protection",
-        "version": "3.0.0",
+        "version": "3.1.0",
         "target_url": "https://share.gemini.google/6hayQFgKruWQ"
     },
     "security_rules": {
