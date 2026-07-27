@@ -1,0 +1,18 @@
+{
+    "system_config": {
+        "app_name": "Gemini Advanced Protection",
+        "version": "3.0.0",
+        "target_url": "https://share.gemini.google/6hayQFgKruWQ"
+    },
+    "security_rules": {
+        "enable_waf": true,
+        "max_requests_per_minute": 60,
+        "block_tor_exit_nodes": true,
+        "block_vpns": false,
+        "strict_origin_check": true
+    },
+    "admin_config": {
+        "admin_secret": "admin12345",
+        "log_retention_minutes": 60
+    }
+}
