@@ -22,18 +22,15 @@
     </style>
 </head>
 <body>
-    <a href="/" class="back-btn">⬅ Kembali</a>
-    
-    <h2>⚡ SECURITY ADMIN PANEL - REAL TIME</h2>
+    <a href="/" class="back-btn">Kembali</a>
+    <h2>SECURITY ADMIN PANEL - REAL TIME</h2>
     <p style="margin-bottom: 20px; color:#666;">Data di-refresh secara otomatis setiap 2 detik.</p>
-
     <div class="dashboard-grid">
         <div class="stat-card"><h3>Total Requests</h3><div class="value" id="tot-req">0</div></div>
         <div class="stat-card"><h3>Serangan Diblokir</h3><div class="value danger" id="tot-block">0</div></div>
         <div class="stat-card"><h3>Sistem WAF</h3><div class="value">AKTIF</div></div>
     </div>
-
-    <h3>📡 Live Traffic & Attack Logs</h3>
+    <h3>Live Traffic & Attack Logs</h3>
     <table>
         <thead>
             <tr>
@@ -49,7 +46,6 @@
             <tr><td colspan="6" style="text-align:center; color:#555;">Memuat data...</td></tr>
         </tbody>
     </table>
-
     <script>
         async function fetchLogs() {
             try {
@@ -58,7 +54,7 @@
                 
                 document.getElementById('tot-req').innerText = data.stats.totalRequests;
                 document.getElementById('tot-block').innerText = data.stats.blockedAttacks;
-
+                
                 const tbody = document.getElementById('log-table');
                 tbody.innerHTML = '';
                 
@@ -66,7 +62,7 @@
                     tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#555;">Belum ada log traffic.</td></tr>';
                     return;
                 }
-
+                
                 data.logs.forEach(log => {
                     const tr = document.createElement('tr');
                     const isBlock = log.action === 'BLOCKED';

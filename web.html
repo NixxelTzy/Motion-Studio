@@ -13,12 +13,10 @@
     </style>
 </head>
 <body>
-    <a href="/" class="back-btn" title="Kembali ke Dashboard">⬅</a>
+    <a href="/" class="back-btn" title="Kembali ke Dashboard">X</a>
     <div id="loader">Menghubungkan ke server aman...</div>
     <iframe id="main-frame" allow="fullscreen"></iframe>
-
     <script>
-        // Mengambil target URL secara dinamis dari backend (yang membaca securitySetting.json)
         fetch('/api/get-target-url')
             .then(res => res.json())
             .then(data => {
