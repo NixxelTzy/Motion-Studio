@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Real-Time Logs</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: monospace; }
+        body { background: #000; color: #0f0; padding: 20px; padding-top: 70px; }
+        .back-btn { position: fixed; top: 15px; left: 15px; background: #222; color: #fff; padding: 10px 15px; border-radius: 8px; text-decoration: none; font-size: 18px; border: 1px solid #444; z-index: 9999; display: flex; align-items: center; gap: 5px; transition: 0.2s; }
+        .back-btn:hover { background: #444; }
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .stat-card { background: #111; border: 1px solid #333; padding: 20px; border-radius: 8px; text-align: center; }
+        .stat-card h3 { color: #888; font-size: 14px; margin-bottom: 10px; }
+        .stat-card .value { font-size: 24px; font-weight: bold; color: #0f0; }
+        .stat-card .value.danger { color: #f00; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; background: #111; }
+        th, td { border: 1px solid #333; padding: 10px; text-align: left; font-size: 13px; }
+        th { background: #222; color: #fff; }
+        .status-block { color: #f00; font-weight: bold; }
+        .status-allow { color: #0f0; }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-btn">⬅ Kembali</a>
+    
+    <h2>⚡ SECURITY ADMIN PANEL - REAL TIME</h2>
+    <p style="margin-bottom: 20px; color:#666;">Data di-refresh secara otomatis setiap 2 detik.</p>
+
+    <div class="dashboard-grid">
+        <div class="stat-card"><h3>Total Requests</h3><div class="value" id="tot-req">0</div></div>
+        <div class="stat-card"><h3>Serangan Diblokir</h3><div class="value danger" id="tot-block">0</div></div>
+        <div class="stat-card"><h3>Sistem WAF</h3><div class="value">AKTIF</div></div>
+    </div>
+
+    <h3>📡 Live Traffic & Attack Logs</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Waktu</th>
+                <th>IP Address</th>
+                <th>Method</th>
+                <th>Endpoint</th>
+                <th>Status</th>
+                <th>Keterangan (Threat)</th>
+            </tr>
+        </thead>
+        <tbody id="log-table">
+            <tr><td colspan="6" style="text-align:center; color:#555;">Memuat data...</td></tr>
+        </tbody>
+    </table>
+
+    <script>
+        async function fetchLogs() {
+            try {
+                const res = await fetch('/api/admin-logs');
+                const data = await res.json();
+                
+                document.getElementById('tot-req').innerText = data.stats.totalRequests;
+                document.getElementById('tot-block').innerText = data.stats.blockedAttacks;
+
+                const tbody = document.getElementById('log-table');
+                tbody.innerHTML = '';
+                
+                if(data.logs.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#555;">Belum ada log traffic.</td></tr>';
+                    return;
+                }
+
+                data.logs.forEach(log => {
+                    const tr = document.createElement('tr');
+                    const isBlock = log.action === 'BLOCKED';
+                    tr.innerHTML = `
+                        <td>${new Date(log.time).toLocaleTimeString()}</td>
+                        <td>${log.ip}</td>
+                        <td>${log.method}</td>
+                        <td>${log.path}</td>
+                        <td class="${isBlock ? 'status-block' : 'status-allow'}">${log.action}</td>
+                        <td style="color: ${isBlock ? '#ffaa00' : '#888'}">${log.reason || '-'}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch(e) {
+                console.error("Gagal mengambil log.");
+            }
+        }
+        setInterval(fetchLogs, 2000);
+        fetchLogs();
+    </script>
+</body>
+</html>
