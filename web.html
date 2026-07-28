@@ -22,7 +22,10 @@
             .then(data => {
                 document.getElementById('loader').style.display = 'none';
                 if(data.url) {
-                    document.getElementById('main-frame').src = data.url;
+                    const f=document.getElementById('main-frame');
+f.src=data.url;
+f.onerror=()=>location.href=data.url;
+setTimeout(()=>{try{if(f.contentWindow&&f.contentWindow.location.href==='about:blank'){location.href=data.url}}catch(e){/*cross-origin; likely blocked*/}},1500);
                 } else {
                     document.getElementById('loader').innerText = "Gagal memuat konfigurasi URL.";
                     document.getElementById('loader').style.display = 'block';
